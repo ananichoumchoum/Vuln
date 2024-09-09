@@ -1,0 +1,5 @@
+bandit
+safety
+snyk
+pylint
+tabulate
