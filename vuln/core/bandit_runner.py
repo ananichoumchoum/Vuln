@@ -1,3 +1,7 @@
+"""
+This module runs the Bandit security scanner on a given path and parses the results.
+It captures the output in JSON format and handles potential errors during the scan.
+"""
 import subprocess
 import json
 import os
@@ -20,21 +24,23 @@ def run_bandit(scan_path):
     # Validate scan path
     if not os.path.exists(scan_path):
         raise FileNotFoundError(f"Scan path '{scan_path}' does not exist.")
-    
+
     try:
         # Run Bandit and capture output
         bandit_cmd = ['bandit', '-r', scan_path, '-f', 'json']
-        
-        process = subprocess.run(bandit_cmd, capture_output=True, text=True)
+
+        process = subprocess.run(bandit_cmd, capture_output=True, text=True, check=False)
+        if process.returncode != 0:
+            logger.error("Bandit scan failed with exit code %d", process.returncode)
+
+        # Parse and return Bandit results (JSON)
         bandit_results = json.loads(process.stdout)
-        
-        # Return Bandit results (parsed JSON)
         return bandit_results
 
     except subprocess.CalledProcessError as e:
-        logger.error(f"Bandit scan failed with error: {e.stderr}")
+        logger.error("Bandit scan failed with Process error: %s", e.stderr)
         return {"error": "Bandit scan failed", "details": e.stderr}
 
-    except Exception as e:
-        logger.error(f"An unexpected error occurred: {e}")
-        return {"error": "Unexpected error", "details": str(e)}
+    except OSError as e:
+        logger.error("An unexpected OS error occurred: %s", str(e))
+        return {"error": "Unexpected OS error", "details": str(e)}
