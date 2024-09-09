@@ -1,8 +1,10 @@
-from vuln.core.bandit_runner import run_bandit
-from tabulate import tabulate
-import textwrap
+"""
+This module contains functions to run and format results from various security tools.
+"""
+from tabulate import tabulate  # Third-party library
+from vuln.core.bandit_runner import run_bandit  # First-party import
 
-# TODO Tool Registry
+# TODO: Add other tools to the Tool Registry, such as Safety, in future versions
 TOOLS = {
     'bandit': run_bandit,
     # Add future tools like 'safety': run_safety
@@ -11,14 +13,17 @@ TOOLS = {
 def run_tool(tool_name, scan_path):
     """
     Runs the specified tool and returns the results.
+    Parameters:
     - tool_name: The name of the tool (e.g., 'bandit').
     - scan_path: The path to scan.
+    
+    Returns:
+    - dict: The results from the tool, typically parsed JSON.
     """
     if tool_name in TOOLS:
         tool_function = TOOLS[tool_name]
         return tool_function(scan_path)
-    else:
-        raise ValueError(f"Tool '{tool_name}' not found.")
+    raise ValueError(f"Tool '{tool_name}' not found.")
 
 def format_results(tool_name, results):
     """

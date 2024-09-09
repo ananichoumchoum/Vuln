@@ -1,14 +1,23 @@
+"""
+This module serves as the entry point for running security tools on specified paths.
+"""
+
 import argparse
 from vuln.core.tool_runner import run_tool, format_results, TOOLS
 
 def main():
+    """
+    Main function that parses command-line arguments and runs the specified security tools.
+    """
     parser = argparse.ArgumentParser(description="Vuln: Security scanner for multiple tools")
-    
+
     # Accept the path to scan as an argument
-    parser.add_argument('--scan-path', type=str, required=True, help="Path to the directory or file to scan")
-    
+    parser.add_argument('--scan-path', type=str, required=True,
+                        help="Path to the directory or file to scan")
+
     # Accept a list of tools to run, default is all tools if not specified
-    parser.add_argument('--tools', type=str, nargs='+', help="List of tools to run (e.g., bandit, safety)")
+    parser.add_argument('--tools', type=str, nargs='+',
+                        help="List of tools to run (e.g., bandit, safety)")
 
     args = parser.parse_args()
 
@@ -22,7 +31,7 @@ def main():
             format_results(tool, results)
         except ValueError as e:
             print(f"Error: {e}")
-        except Exception as ex:
+        except Exception as ex:  # Catching any unexpected errors
             print(f"Unexpected error occurred while running {tool}: {ex}")
 
 if __name__ == "__main__":
