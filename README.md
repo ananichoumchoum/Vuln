@@ -39,23 +39,29 @@
 
 ## Usage
 To scan a Python project for security issues using all tools, run:
-    python -m vuln.main --scan-path ../path/to/your/file  
-   
-To scan a Python project for security issues using specific tools like Bandit, run:
+```bash
+python -m vuln.main --scan-path ../path/to/your/file
+```
 
-    python -m main --scan-path ../path/to/your/file --tools bandit
+To scan a Python project for security issues using specific tools like Bandit, run:
+```bash
+python -m main --scan-path ../path/to/your/file --tools bandit
+```
+
 
 ### Sample Output
     Tool: Bandit
     Issue Count: 3
-    Description: Hardcoded password found in config.py
+    Description: The description is a pretty table with File, Line, Description, Severity and Confidence
 
 The results are JSON-parsed, making it easy to further process or integrate into other tools if necessary.
 
 ## Running Tests
 Unit tests are provided to verify the functionality of the Bandit module. You can run the tests using:
 
-`python -m vuln.main --scan-path /path/to/your/project`
+```bash
+python -m vuln.main --scan-path /path/to/your/project
+```
 
 This command will run all unit tests and ensure that the module works as expected.
 
