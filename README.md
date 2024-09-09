@@ -33,6 +33,10 @@
 3. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
+4. Install Snyk using npm (Node.js must be installed):
+    ```bash
+    npm install -g snyk
+
 ## Usage
 To scan a Python project for security issues using Bandit, run:
 
