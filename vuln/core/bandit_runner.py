@@ -3,7 +3,7 @@ import json
 import os
 import logging
 
-# Set up basic logging
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -24,16 +24,17 @@ def run_bandit(scan_path):
     try:
         # Run Bandit and capture output
         bandit_cmd = ['bandit', '-r', scan_path, '-f', 'json']
-        process = subprocess.run(bandit_cmd, capture_output=True, text=True, check=True)
-
-        # Parse and return Bandit results
+        
+        process = subprocess.run(bandit_cmd, capture_output=True, text=True)
         bandit_results = json.loads(process.stdout)
+        
+        # Return Bandit results (parsed JSON)
         return bandit_results
 
     except subprocess.CalledProcessError as e:
         logger.error(f"Bandit scan failed with error: {e.stderr}")
         return {"error": "Bandit scan failed", "details": e.stderr}
-    
+
     except Exception as e:
         logger.error(f"An unexpected error occurred: {e}")
         return {"error": "Unexpected error", "details": str(e)}

@@ -38,9 +38,12 @@
     npm install -g snyk
 
 ## Usage
-To scan a Python project for security issues using Bandit, run:
+To scan a Python project for security issues using all tools, run:
+    python -m vuln.main --scan-path ../path/to/your/file  
+   
+To scan a Python project for security issues using specific tools like Bandit, run:
 
-    python -m vuln.main --scan-path /path/to/your/project
+    python -m main --scan-path ../path/to/your/file --tools bandit
 
 ### Sample Output
     Tool: Bandit
