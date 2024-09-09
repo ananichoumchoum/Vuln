@@ -40,7 +40,7 @@
 ## Usage
 To scan a Python project for security issues using all tools, run:
 ```bash
-python -m vuln.main --scan-path ../path/to/your/file
+python -m main --scan-path ../path/to/your/file
 ```
 
 To scan a Python project for security issues using specific tools like Bandit, run:
@@ -60,7 +60,13 @@ The results are JSON-parsed, making it easy to further process or integrate into
 Unit tests are provided to verify the functionality of the Bandit module. You can run the tests using:
 
 ```bash
-python -m vuln.main --scan-path /path/to/your/project
+python -m unittest tests.test_bandit_runner
+```
+
+Otherwise you can run this command:
+
+```bash
+python -m unittest discover -s tests
 ```
 
 This command will run all unit tests and ensure that the module works as expected.
