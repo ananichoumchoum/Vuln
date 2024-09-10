@@ -12,10 +12,15 @@
 8. [License](#license)
 
 ### Overview
-**Vuln** is a Python-based security tool designed to scan Python codebases for common security issues. This tool integrates with popular security scanning tools such as Bandit and provides a modular and extendable framework to help developers maintain secure code.
+**Vuln** is a Python-based security tool designed to scan Python codebases for common security vulnerabilities and coding practices. It integrates with popular security scanning tools such as Bandit and Safety, providing a modular and extendable framework to help developers maintain secure code.
+
+Bandit identifies common security issues like hardcoded secrets, unsafe use of functions, and potential injection vulnerabilities in Python code.
+Safety checks project dependencies for known vulnerabilities in third-party libraries, ensuring that your project does not rely on insecure packages.
+With its modular design, Vuln is extendable and adaptable, making it easy to integrate additional security tools and enforce secure coding conventions across projects.
 
 ## Features
 - **Bandit Module**: Scans Python code for security issues like hardcoded secrets, SQL injection, and more.
+- **Safety Module**: Checks project dependencies for known vulnerabilities in third-party libraries, ensuring safe usage of external packages.
 - **Error Handling**: Ensures graceful failure with informative error messages.
 - **Modular Design**: Easily extend the tool with additional security scanners.
 
@@ -47,12 +52,24 @@ To scan a Python project for security issues using specific tools like Bandit, r
 ```bash
 python -m main --scan-path ../path/to/your/file --tools bandit
 ```
+If you want to scan a specific requirements.txt file that is not in the root of your project or has a different name, you should pass the path to that file explicitly using the --requirements-file argument for the Safety tool.
 
+Here’s how you can run the scan with the custom requirements.txt file:
+```bash
+python -m main --scan-path ../path/to/your/project --tools safety --requirements-file custom_requirements.txt
+```
+
+#### Explanation of Arguments:
+`--scan-path`: The directory path to scan for security issues.
+
+`--tools`: Allows you to choose which tool(s) to use for the scan (e.g., bandit, safety). If not specified, all tools will run by default.
+
+`--requirements-file`: The default file for Safety scans is **requirements.txt** located in the root directory, following Python's standard project structure. If your project uses a different file name or places it elsewhere, you can specify the exact file path using this argument.
+
+This setup allows you to run versatile scans tailored to your specific needs while maintaining flexibility for different project structures.
 
 ### Sample Output
-    Tool: Bandit
-    Issue Count: 3
-    Description: The description is a pretty table with File, Line, Description, Severity and Confidence
+   ![alt text](image.png)
 
 The results are JSON-parsed, making it easy to further process or integrate into other tools if necessary.
 
