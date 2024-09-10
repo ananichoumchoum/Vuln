@@ -7,7 +7,6 @@ from tabulate import tabulate
 from vuln.core.bandit_runner import run_bandit
 from vuln.core.safety_runner import run_safety
 
-# Updated Tool Registry with both Bandit and Safety
 TOOLS = {
     'bandit': run_bandit,
     'safety': run_safety,

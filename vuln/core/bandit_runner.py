@@ -2,7 +2,6 @@
 This module runs the Bandit security scanner on a given path and parses the results.
 It captures the output in JSON format and handles potential errors during the scan.
 """
-
 import subprocess
 import json
 import os

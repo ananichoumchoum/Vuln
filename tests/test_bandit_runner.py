@@ -2,11 +2,19 @@
 Unit tests for the Bandit runner module.
 """
 
+<<<<<<< HEAD
 import unittest
 import subprocess
 from unittest.mock import patch
 
 from vuln.core.bandit_runner import run_bandit
+=======
+import unittest  # Standard library
+import subprocess  # Standard library
+from unittest.mock import patch  # Standard library
+
+from vuln.core.bandit_runner import run_bandit  # Local project import
+>>>>>>> c130dc3cede02c41980f00ea8baabd6ad6849d18
 
 class TestBanditRunner(unittest.TestCase):
     """Tests for Bandit runner methods."""
