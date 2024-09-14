@@ -6,10 +6,12 @@ import textwrap
 from tabulate import tabulate
 from vuln.core.bandit_runner import run_bandit
 from vuln.core.safety_runner import run_safety
+from vuln.core.pylint_runner import run_pylint
 
 TOOLS = {
     'bandit': run_bandit,
     'safety': run_safety,
+    'pylint': run_pylint,
 }
 
 def run_tool(tool_name, scan_path):
@@ -98,3 +100,16 @@ def format_results(tool_name, results):
         print("More Info about these issues:")
         for info in safety_more_info:
             print(info)
+        
+    elif tool_name == 'pylint':
+        # Handling Pylint results
+        if results.get('pylint_output'):
+            print(results['pylint_output'])
+
+        # Print the score if present
+        if tool_name == 'pylint' and 'score' in results:
+            print(f"Pylint score: {results['score']}/10")
+        
+        # Print error if it's present
+        if results.get('error'):
+            print(f"Error: {results['error']}")
