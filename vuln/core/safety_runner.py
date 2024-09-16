@@ -21,7 +21,7 @@ def run_safety(requirements_file):
     Returns:
     - dict: JSON-parsed result of the Safety scan or error details.
     """
-    print(f"Tool: Safety")
+    print("Tool: Safety")
 
     # Validate the requirements file path
     if not os.path.exists(requirements_file):

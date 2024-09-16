@@ -6,6 +6,7 @@ import subprocess
 import logging
 import os
 import git
+from git.exc import InvalidGitRepositoryError, GitCommandError
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -23,7 +24,7 @@ def is_git_repo(scan_path):
     try:
         _ = git.Repo(scan_path).git_dir
         return True
-    except git.exc.InvalidGitRepositoryError:
+    except InvalidGitRepositoryError:
         return False
 
 def has_remote_origin(scan_path):
@@ -39,8 +40,8 @@ def has_remote_origin(scan_path):
     try:
         repo = git.Repo(scan_path)
         return "origin" in repo.remotes
-    except Exception as e:
-        logger.error(f"Error checking for remote origin: {e}\n")
+    except GitCommandError as e:
+        logger.error("Error checking for remote origin: %s\n", e)
         return False
 
 def run_trufflehog(scan_path):
@@ -53,9 +54,9 @@ def run_trufflehog(scan_path):
     Returns:
         dict: A dictionary containing the output of the scan.
     """
-    print(f"Tool: TruffleHog")
-    
-    # Check if the directory is a valid Git repository
+    print("Tool: TruffleHog")
+
+  # Check if the directory is a valid Git repository
     if not is_git_repo(scan_path):
         error_msg = f"{scan_path} is not a valid Git repository.\n"
         logger.error(error_msg)
@@ -76,7 +77,7 @@ def run_trufflehog(scan_path):
     try:
         # Command to run TruffleHog
         trufflehog_cmd = ['trufflehog', 'git', '--repo_path', scan_path]
-        process = subprocess.run(trufflehog_cmd, capture_output=True, text=True)
+        process = subprocess.run(trufflehog_cmd, capture_output=True, text=True, check=False)
 
         # Check if any secrets were found
         if process.returncode == 0:
@@ -84,7 +85,8 @@ def run_trufflehog(scan_path):
         else:
             logger.warning("TruffleHog found potential secrets.\n")
 
-        return {"output": process.stdout, "error": process.stderr if process.returncode != 0 else None}
+        return {"output": process.stdout,
+        "error": process.stderr if process.returncode != 0 else None}
 
     except subprocess.CalledProcessError as e:
         error_msg = f"TruffleHog execution failed: {e}\n"

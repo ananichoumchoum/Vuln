@@ -19,7 +19,7 @@ def run_pylint(scan_path):
     Returns:
         dict: A dictionary containing the Pylint output and any errors.
     """
-    print(f"Tool: Pylint")
+    print("Tool: Pylint")
 
     try:
         # Command to run Pylint

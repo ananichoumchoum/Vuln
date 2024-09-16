@@ -21,7 +21,7 @@ def run_bandit(scan_path):
     Returns:
     - dict: JSON-parsed result of the Bandit scan.
     """
-    print(f"Tool: Bandit")
+    print("Tool: Bandit")
 
     # Validate scan path
     if not os.path.exists(scan_path):

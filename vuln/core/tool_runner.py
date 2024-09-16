@@ -43,14 +43,14 @@ def format_results(tool_name, results):
     elif tool_name == 'safety':
         format_safety_results(results)
     else:
-        print_results(tool_name, results)
+        print_results(results)
 
 def format_bandit_results(results):
     """
-    Formats and prints the results for a given Bandit
+    Formats and prints the results for Bandit
     - results: The results from the tool.
     """
-    # Handling Bandit results
+
     if 'results' in results and results['results']:
         print(f"Issue Count: {len(results['results'])}")
 
@@ -76,6 +76,11 @@ def format_bandit_results(results):
         print(f"Error: {results['error']}\nDetails: {results['details']}")
 
 def format_safety_results(results):
+    """
+    Formats and prints the results for Safety
+    - results: The results from the tool.
+    """
+
     if 'vulnerabilities' in results:
         print(f"Issue Count: {len(results['vulnerabilities'])}")
 
@@ -117,7 +122,11 @@ def format_safety_results(results):
         print('\n')
 
 # General print function for tools like TruffleHog and Pylint
-def print_results(tool_name, results):
+def print_results(results):
+    """
+    Formats and prints the results for a tool
+    - results: The results from the tool.
+    """
     if results.get('output'):
         print(results['output'])
     if results.get('error'):
