@@ -21,10 +21,15 @@ def run_safety(requirements_file):
     Returns:
     - dict: JSON-parsed result of the Safety scan or error details.
     """
+    print(f"Tool: Safety")
+
     # Validate the requirements file path
     if not os.path.exists(requirements_file):
-        raise FileNotFoundError(f"Requirements file '{requirements_file}' does not exist.")
-
+        print("[Error] Requirements file not found.")
+        print("It seems the requirements file is missing from the path you specified.")
+        print("If your requirements file has a different name or is located elsewhere, please use:")
+        print("--requirements-file <file_path/name_file> --tools safety\n")
+        return {"error": "Requirements file not found"}
     try:
         # Run Safety and capture output
         safety_cmd = ['safety', 'check', '--file', requirements_file, '--json']
@@ -44,16 +49,16 @@ def run_safety(requirements_file):
                 safety_results = json.loads(process.stdout)
                 return safety_results
             except json.JSONDecodeError as e:
-                logger.error("Failed to parse Safety output as JSON: %s", e)
+                logger.error("Failed to parse Safety output as JSON: %s \n", e)
                 return {"error": "Invalid JSON output from Safety", "details": process.stdout}
         else:
             logger.error("Safety scan produced no output.")
-            return {"error": "No output from Safety", "details": "Empty stdout"}
+            return {"error": "No output from Safety", "details": "Empty stdout \n"}
 
     except subprocess.CalledProcessError as e:
-        logger.error("Safety scan failed with error: %s", e.stderr)
+        logger.error("Safety scan failed with error: %s \n", e.stderr)
         return {"error": "Safety scan failed", "details": e.stderr}
 
     except OSError as e:
-        logger.error("An unexpected OS error occurred: %s", e)
+        logger.error("An unexpected OS error occurred: %s \n", e)
         return {"error": "Unexpected OS error", "details": str(e)}

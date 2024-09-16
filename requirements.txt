@@ -1,4 +1,5 @@
 bandit
 safety
+trufflehog
 pylint
 tabulate

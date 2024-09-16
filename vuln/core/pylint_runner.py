@@ -19,6 +19,8 @@ def run_pylint(scan_path):
     Returns:
         dict: A dictionary containing the Pylint output and any errors.
     """
+    print(f"Tool: Pylint")
+
     try:
         # Command to run Pylint
         pylint_cmd = ['pylint', scan_path]
@@ -41,7 +43,7 @@ def run_pylint(scan_path):
 
         # Return the output and any error messages
         return {
-            "pylint_output": pylint_output,
+            "output": pylint_output,
             "error": process.stderr if process.returncode != 0 else None,
         }
 

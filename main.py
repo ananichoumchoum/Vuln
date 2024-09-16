@@ -22,7 +22,7 @@ def main():
 
     # Accept a list of tools to run, default is all tools if not specified
     parser.add_argument('--tools', type=str, nargs='+',
-                        help="List of tools to run (e.g., bandit, safety)")
+                        help="List of tools to run (e.g., bandit, safety, pylint, trufflehog)")
 
     args = parser.parse_args()
 
@@ -35,8 +35,6 @@ def main():
             if tool == 'safety':
                 # Ensure the requirements file path is properly formed
                 requirements_file_path = os.path.join(args.scan_path, args.requirements_file)
-                if not os.path.exists(requirements_file_path):
-                    raise FileNotFoundError(f"Requirements '{requirements_file_path}' not found.")
                 results = run_tool(tool, requirements_file_path)
             else:
                 # Run Bandit or other tools that use the scan path directly

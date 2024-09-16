@@ -21,6 +21,8 @@ def run_bandit(scan_path):
     Returns:
     - dict: JSON-parsed result of the Bandit scan.
     """
+    print(f"Tool: Bandit")
+
     # Validate scan path
     if not os.path.exists(scan_path):
         raise FileNotFoundError(f"Scan path '{scan_path}' does not exist.")
