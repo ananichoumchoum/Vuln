@@ -6,11 +6,13 @@ import textwrap
 from tabulate import tabulate
 from vuln.core.bandit_runner import run_bandit
 from vuln.core.safety_runner import run_safety
+from vuln.core.trufflehog_runner import run_trufflehog
 from vuln.core.pylint_runner import run_pylint
 
 TOOLS = {
     'bandit': run_bandit,
     'safety': run_safety,
+    'trufflehog': run_trufflehog,
     'pylint': run_pylint,
 }
 
@@ -29,41 +31,57 @@ def run_tool(tool_name, scan_path):
         return tool_function(scan_path)
     raise ValueError(f"Tool '{tool_name}' not found.")
 
+# Main format_results function to handle Bandit and Safety specifically
 def format_results(tool_name, results):
     """
-    Formats and prints the results for a given tool.
+    Formats and prints the results for Bandit and Safety tools.
     - tool_name: The name of the tool (e.g., 'bandit', 'safety').
     - results: The results from the tool.
     """
     if tool_name == 'bandit':
-        # Handling Bandit results
-        if 'results' in results and results['results']:
-            print(f"Tool: {tool_name.capitalize()}")
-            print(f"Issue Count: {len(results['results'])}")
+        format_bandit_results(results)
+    elif tool_name == 'safety':
+        format_safety_results(results)
+    else:
+        print_results(results)
 
-            table_data = []
-            more_info = []
-            for issue in results['results']:
-                more_info.append(issue['more_info'])
-                table_data.append([
-                    issue['filename'],
-                    issue['line_number'],
-                    issue['issue_text'],
-                    issue['issue_severity'],
-                    issue['issue_confidence'],
-                ])
+def format_bandit_results(results):
+    """
+    Formats and prints the results for Bandit
+    - results: The results from the tool.
+    """
 
-            headers = ["File", "Line", "Description", "Severity", "Confidence"]
-            print(tabulate(table_data, headers=headers, tablefmt="pretty"))
-            print("More Info about these issues:")
-            for info in more_info:
-                print(info)
-            print('\n')
-        elif 'error' in results:
-            print(f"Error: {results['error']}\nDetails: {results['details']}")
+    if 'results' in results and results['results']:
+        print(f"Issue Count: {len(results['results'])}")
 
-    if tool_name == 'safety' and 'vulnerabilities' in results:
-        print(f"Tool: {tool_name.capitalize()}")
+        table_data = []
+        more_info = []
+        for issue in results['results']:
+            more_info.append(issue['more_info'])
+            table_data.append([
+                issue['filename'],
+                issue['line_number'],
+                issue['issue_text'],
+                issue['issue_severity'],
+                issue['issue_confidence'],
+            ])
+
+        headers = ["File", "Line", "Description", "Severity", "Confidence"]
+        print(tabulate(table_data, headers=headers, tablefmt="pretty"))
+        print("More Info about these issues:")
+        for info in more_info:
+            print(info)
+        print('\n')
+    elif 'error' in results:
+        print(f"Error: {results['error']}\nDetails: {results['details']}")
+
+def format_safety_results(results):
+    """
+    Formats and prints the results for Safety
+    - results: The results from the tool.
+    """
+
+    if 'vulnerabilities' in results:
         print(f"Issue Count: {len(results['vulnerabilities'])}")
 
         # Prepare table data for vulnerabilities in Safety's results
@@ -103,11 +121,15 @@ def format_results(tool_name, results):
             print(info)
         print('\n')
 
-    if tool_name == 'pylint':
-        print(f"Tool: {tool_name.capitalize()}")
-
-        if results.get('pylint_output'):
-            print(results['pylint_output'])
-        # Print error if it's present
-        if results.get('error'):
-            print(f"Error: {results['error']}")
+# General print function for tools like TruffleHog and Pylint
+def print_results(results):
+    """
+    Formats and prints the results for a tool
+    - results: The results from the tool.
+    """
+    if results.get('output'):
+        print(results['output'])
+    if results.get('error'):
+        print(f"Error: {results['error']}")
+    else:
+        print('\n')
