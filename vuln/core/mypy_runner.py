@@ -4,7 +4,6 @@ and return the type checking output along with any errors encountered.
 """
 import subprocess
 import logging
-import os
 
 # Initialize logger
 logger = logging.getLogger(__name__)

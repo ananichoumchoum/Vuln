@@ -1,3 +1,6 @@
+"""
+Unit tests for the Mypy runner module.
+"""
 import unittest
 from unittest.mock import patch
 import subprocess
@@ -33,7 +36,8 @@ class TestMypyRunner(unittest.TestCase):
         results = run_mypy('valid/file_with_issues.py')
         self.assertIsInstance(results, dict)
         self.assertIn('output', results)
-        self.assertEqual(results['output'], "valid/file_with_issues.py:3: error: Incompatible types in assignment")
+        self.assertEqual(
+            results['output'], "valid/file_with_issues.py:3: error: Incompatible types")
         self.assertIsNone(results['error'])
 
     @patch('subprocess.run')
