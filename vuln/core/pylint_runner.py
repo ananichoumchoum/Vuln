@@ -59,18 +59,19 @@ def run_pylint(scan_path):
 
         # Process Flake8 output and normalize paths
         for line in flake8_output_lines:
-            if line.startswith(".."):
-                file_path = os.path.normpath(line.split(":")[0])
-            else:
-                file_path = os.path.normpath(line.split(":")[1])
+            if ':' in line:  # Ensure the line contains a colon before splitting
+                if line.startswith(".."):
+                    file_path = os.path.normpath(line.split(":")[0])
+                else:
+                    file_path = os.path.normpath(line.split(":")[1])
 
-            file_path = trim_path(file_path)
-            if file_path in module_output:
-                # Prepend Flake8 output to the beginning of the existing module output
-                module_output[file_path].insert(1, f"Flake8: {line}")
-            else:
-                # If the module doesn't exist in Pylint output, create a new entry
-                module_output[file_path] = [f"Flake8: {line}"]
+                file_path = trim_path(file_path)
+                if file_path in module_output:
+                    # Prepend Flake8 output to the beginning of the existing module output
+                    module_output[file_path].insert(1, f"Flake8: {line}")
+                else:
+                    # If the module doesn't exist in Pylint output, create a new entry
+                    module_output[file_path] = [f"Flake8: {line}"]
 
         # Join the combined output into a single string
         combined_output_str = "\n".join(
