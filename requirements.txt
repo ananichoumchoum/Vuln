@@ -1,5 +1,6 @@
 bandit
 safety
 trufflehog
+checkov
 pylint
 tabulate
