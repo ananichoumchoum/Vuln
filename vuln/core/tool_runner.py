@@ -8,6 +8,7 @@ from vuln.core.bandit_runner import run_bandit
 from vuln.core.safety_runner import run_safety
 from vuln.core.checkov_runner import run_checkov
 from vuln.core.trufflehog_runner import run_trufflehog
+from vuln.core.mypy_runner import run_mypy
 from vuln.core.pylint_runner import run_pylint
 
 TOOLS = {
@@ -15,6 +16,7 @@ TOOLS = {
     'safety': run_safety,
     'checkov': run_checkov,
     'trufflehog': run_trufflehog,
+    'mypy': run_mypy,
     'pylint': run_pylint,
 }
 

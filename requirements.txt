@@ -2,6 +2,8 @@ bandit
 safety
 trufflehog
 checkov
+mypy
+radon
 pylint
 flake8
 tabulate
