@@ -3,4 +3,5 @@ safety
 trufflehog
 checkov
 pylint
+flake8
 tabulate

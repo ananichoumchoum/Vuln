@@ -1,53 +1,89 @@
 """
-This module contains functions to run Pylint on a given file or directory
-and return the linting output along with any errors encountered.
+This module contains functions to run Pylint with Dlint on a given file or directory
+and return the scan output along with any errors encountered.
 """
 import subprocess
 import logging
+import os
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+def trim_path(file_path):
+    """
+    Trims the path to keep only the last folder and file name.
+    """
+    # Get the last directory and the file name
+    folder = os.path.basename(os.path.dirname(file_path))
+    file = os.path.basename(file_path)
+    # Combine the folder and file name
+    return os.path.join(folder, file)
+
 def run_pylint(scan_path):
     """
-    Runs the Pylint command on the specified scan_path and returns the output
-    and error messages (if any).
-
+    Runs both Pylint and Flake8 on the specified scan_path, combines their outputs,
+    and returns the output grouped by file/module.
+    
     Args:
-        scan_path (str): The file or directory path to scan with Pylint.
-
+        scan_path (str): The file or directory path to scan.
+        
     Returns:
-        dict: A dictionary containing the Pylint output and any errors.
+        dict: A dictionary containing the combined output and any errors.
     """
-    print("Tool: Pylint")
-
+    print("Tool: Pylint (with Flake8 for Dlint)")
     try:
-        # Command to run Pylint
-        pylint_cmd = ['pylint', scan_path]
-
         # Run Pylint and capture the output and errors
-        process = subprocess.run(pylint_cmd, capture_output=True, text=True, check=False)
-        pylint_output = process.stdout
+        pylint_cmd = ['pylint', scan_path]
+        process_pylint = subprocess.run(pylint_cmd, capture_output=True, text=True, check=False)
+        pylint_output_lines = process_pylint.stdout.splitlines()
 
-        # Determine the exit code and log the appropriate message
-        if process.returncode == 0:
-            print("Pylint scan completed with no issues.")
-        elif process.returncode in {1, 20}:
-            logger.warning("Pylint scan found linting issues.")
-        elif process.returncode == 32:
-            logger.error("Pylint usage error.")
-        elif process.returncode == 2:
-            logger.error("Pylint fatal error or parse error.")
-        else:
-            logger.error("Pylint scan failed with exit code %d", process.returncode)
+        # Run Flake8 and capture the output and errors
+        flake8_cmd = ['flake8', scan_path]
+        process_flake8 = subprocess.run(flake8_cmd, capture_output=True, text=True, check=False)
+        flake8_output_lines = process_flake8.stdout.splitlines()
 
-        # Return the output and any error messages
+        # Store output by file/module
+        combined_output = []
+        module_output = {}  # Dictionary to track output per module
+        current_module = None
+
+        # Process Pylint output and normalize paths
+        for line in pylint_output_lines:
+            if line.startswith("************* Module"):
+                # Normalize Pylint module path by converting it to a relative file path
+                current_module = line.split()[-1].replace(".", os.sep) + ".py"
+                current_module = trim_path(current_module)  # Apply the trimming to Pylint paths
+                module_output[current_module] = [line]  # Initialize with the module line
+            elif current_module:
+                module_output[current_module].append(line)
+
+        # Process Flake8 output and normalize paths
+        for line in flake8_output_lines:
+            if line.startswith(".."):
+                file_path = os.path.normpath(line.split(":")[0])
+            else:
+                file_path = os.path.normpath(line.split(":")[1])
+
+            file_path = trim_path(file_path)
+            if file_path in module_output:
+                # Prepend Flake8 output to the beginning of the existing module output
+                module_output[file_path].insert(1, f"Flake8: {line}")
+            else:
+                # If the module doesn't exist in Pylint output, create a new entry
+                module_output[file_path] = [f"Flake8: {line}"]
+
+        # Join the combined output into a single string
+        combined_output_str = "\n".join(
+            "\n".join(output_lines) for output_lines in module_output.values())
+
+        # Return the combined output
         return {
-            "output": pylint_output,
-            "error": process.stderr if process.returncode != 0 else None,
+            "output": combined_output_str,
+            "error": process_pylint.stderr if process_pylint.returncode != 0 else None,
         }
 
     except subprocess.CalledProcessError as e:
         # Log any subprocess errors
-        logger.error("Pylint execution failed: %s", e)
-        return {"error": "Pylint execution failed", "details": str(e)}
+        logger.error("Execution failed: %s", e)
+        return {"error": "Execution failed", "details": str(e)}
+    

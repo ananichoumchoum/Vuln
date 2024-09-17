@@ -18,11 +18,11 @@ def main():
 
     # Accept the requirements.txt path for Safety
     parser.add_argument('--requirements-file', type=str, default='requirements.txt',
-                        help="Path to the requirements file (for Safety)")
+                        help="Path to the requirements file (for Safety). Default: ./requirements.txt")
 
     # Accept a list of tools to run, default is all tools if not specified
     parser.add_argument('--tools', type=str, nargs='+',
-                        help="List of tools to run (e.g., bandit, safety, pylint, trufflehog)")
+                        help="List of tools to run (e.g., bandit, safety, pylint, trufflehog, checkov)")
 
     args = parser.parse_args()
 
