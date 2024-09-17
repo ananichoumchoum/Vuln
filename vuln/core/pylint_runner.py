@@ -43,7 +43,6 @@ def run_pylint(scan_path):
         flake8_output_lines = process_flake8.stdout.splitlines()
 
         # Store output by file/module
-        combined_output = []
         module_output = {}  # Dictionary to track output per module
         current_module = None
 
