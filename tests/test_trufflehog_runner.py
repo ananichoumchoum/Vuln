@@ -11,6 +11,7 @@ from vuln.core.trufflehog_runner import is_git_repo, has_remote_origin, run_truf
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 class TestTruffleHogRunner(unittest.TestCase):
     """Tests for the Safety runner methods."""
 
@@ -26,7 +27,7 @@ class TestTruffleHogRunner(unittest.TestCase):
     @patch('git.Repo')
     def test_is_git_repo_invalid(self, mock_repo):
         """Test when the given path is not a Git repository."""
-        mock_repo.side_effect = git.exc.InvalidGitRepositoryError # pylint: disable=no-member
+        mock_repo.side_effect = git.exc.InvalidGitRepositoryError
         scan_path = '/invalid/path'
         self.assertFalse(is_git_repo(scan_path))
 
@@ -52,7 +53,12 @@ class TestTruffleHogRunner(unittest.TestCase):
     @patch('vuln.core.trufflehog_runner.is_git_repo', return_value=True)
     @patch('vuln.core.trufflehog_runner.has_remote_origin', return_value=True)
     def test_run_trufflehog_success(
-        self, mock_is_git_repo, mock_has_remote_origin, mock_subprocess, mock_path_exists):
+        self,
+        mock_is_git_repo,
+        mock_has_remote_origin,
+        mock_subprocess,
+        mock_path_exists
+    ):
         """Test successful run of TruffleHog."""
         mock_process = MagicMock()
         mock_process.returncode = 0
@@ -71,38 +77,55 @@ class TestTruffleHogRunner(unittest.TestCase):
     @patch('vuln.core.trufflehog_runner.is_git_repo', return_value=True)
     @patch('vuln.core.trufflehog_runner.has_remote_origin', return_value=False)
     def test_run_trufflehog_no_remote_origin(
-        self, mock_is_git_repo, mock_has_remote_origin, mock_subprocess, mock_path_exists):
+        self,
+        mock_is_git_repo,
+        mock_has_remote_origin,
+        mock_subprocess,
+        mock_path_exists
+    ):
         """Test when the repository has no remote origin."""
         scan_path = '/repo/no-origin'
         result = run_trufflehog(scan_path)
 
         self.assertIn("error", result)
-        self.assertEqual(result["error"], f"{scan_path} does not have a remote 'origin' set.\n")
+        self.assertEqual(result["error"],
+                         f"{scan_path} does not have a remote 'origin' set.\n")
 
     @patch('os.path.exists', return_value=False)
     @patch('vuln.core.trufflehog_runner.is_git_repo', return_value=True)
     @patch('vuln.core.trufflehog_runner.has_remote_origin', return_value=True)
     def test_run_trufflehog_invalid_git_history(
-        self, mock_is_git_repo, mock_has_remote_origin, mock_path_exists):
+        self,
+        mock_is_git_repo,
+        mock_has_remote_origin,
+        mock_path_exists
+    ):
         """Test when the repository does not have a valid Git history."""
         scan_path = '/repo/no-git-history'
         result = run_trufflehog(scan_path)
 
         self.assertIn("error", result)
-        self.assertEqual(result["error"], f"{scan_path} does not contain a valid Git history.\n")
+        self.assertEqual(result["error"],
+                         f"{scan_path} does not contain valid Git history.\n")
 
     @patch('subprocess.run', side_effect=subprocess.CalledProcessError(1, 'trufflehog'))
     @patch('os.path.exists', return_value=True)
     @patch('vuln.core.trufflehog_runner.is_git_repo', return_value=True)
     @patch('vuln.core.trufflehog_runner.has_remote_origin', return_value=True)
     def test_run_trufflehog_execution_failure(
-        self, mock_is_git_repo, mock_has_remote_origin, mock_subprocess, mock_path_exists):
+        self,
+        mock_is_git_repo,
+        mock_has_remote_origin,
+        mock_subprocess,
+        mock_path_exists
+    ):
         """Test when TruffleHog execution fails."""
         scan_path = '/valid/repo'
         result = run_trufflehog(scan_path)
 
         self.assertIn("error", result)
         self.assertTrue("TruffleHog execution failed" in result["error"])
+
 
 if __name__ == '__main__':
     unittest.main()

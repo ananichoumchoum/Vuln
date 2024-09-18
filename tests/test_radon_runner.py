@@ -24,7 +24,8 @@ class TestRadonRunner(unittest.TestCase):
         results = run_radon('valid/file.py')
         self.assertIsInstance(results, dict)
         self.assertIn('output', results)
-        self.assertIn("All functions have low complexity (A or B).", results['output'])
+        self.assertIn("All functions have low complexity (A or B).",
+                      results['output'])
         self.assertIsNone(results['error'])
 
     @patch('subprocess.run')
@@ -51,6 +52,7 @@ class TestRadonRunner(unittest.TestCase):
         results = run_radon('invalid/scan_path')
 
         self.assertIn("Radon scan failed", results['error'])
+
 
 if __name__ == '__main__':
     unittest.main()
