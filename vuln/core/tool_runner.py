@@ -3,6 +3,7 @@ This module contains functions to run and format results from various tools
 """
 
 import textwrap
+import os
 from tabulate import tabulate
 from vuln.core.bandit_runner import run_bandit
 from vuln.core.safety_runner import run_safety
@@ -69,8 +70,27 @@ def format_bandit_results(results):
         more_info = []
         for issue in results['results']:
             more_info.append(issue['more_info'])
+            # Get the full file path
+            print(f"Processing issue: {issue}")
+            full_path = issue.get('filename', '') 
+            print(f"Full Path: {full_path}")
+            # Check if the path exists and handle the case if it's empty
+            if full_path:
+                # Get the base name (file name with extension)
+                filename = os.path.basename(full_path)
+                print(f"Full Path: {full_path}")
+                
+                # Get the directory part of the path (last folder)
+                directory = os.path.basename(os.path.dirname(full_path))
+                
+                # Combine directory and filename
+                formatted_path = os.path.join(directory, filename)
+                print(f"Formatted Path: {formatted_path}")
+            else:
+                # Fallback in case filename is missing or empty
+                formatted_path = "Unknown Path"
             table_data.append([
-                issue['filename'],
+                formatted_path,
                 issue['line_number'],
                 issue['issue_text'],
                 issue['issue_severity'],
@@ -78,7 +98,10 @@ def format_bandit_results(results):
             ])
 
         headers = ["File", "Line", "Description", "Severity", "Confidence"]
-        print(tabulate(table_data, headers=headers, tablefmt="pretty"))
+        print(tabulate(table_data, 
+                       headers=headers,
+                       tablefmt="grid", 
+                       maxcolwidths=[25, 8, 50, 10, 10]))
         print("More Info about these issues:")
         for info in more_info:
             print(info)
@@ -204,7 +227,8 @@ def format_checkov_results(raw_output):
     # Prepare and print the formatted table
     if failed_checks:
         headers = ["File", "Start Line", "End Line", "Check ID", "Description"]
-        print(tabulate(failed_checks, headers=headers, tablefmt="pretty"))
+        print(tabulate(failed_checks, headers=headers, tablefmt="grid",
+                       maxcolwidths=[25, 8, 8, 15, 70]))
 
     # Print guide URLs for additional information
     if more_info:
