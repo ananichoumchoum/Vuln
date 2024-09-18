@@ -1,5 +1,5 @@
 """
-This module contains functions to run and format results from various security tools.
+This module contains functions to run and format results from various tools
 """
 
 import textwrap
@@ -22,13 +22,14 @@ TOOLS = {
     'pylint': run_pylint,
 }
 
+
 def run_tool(tool_name, scan_path):
     """
     Runs the specified tool and returns the results.
     Parameters:
     - tool_name: The name of the tool (e.g., 'bandit', 'safety').
     - scan_path: The path to scan.
-    
+
     Returns:
     - dict: The results from the tool, typically parsed JSON.
     """
@@ -37,7 +38,8 @@ def run_tool(tool_name, scan_path):
         return tool_function(scan_path)
     raise ValueError(f"Tool '{tool_name}' not found.")
 
-# Main format_results function to handle Bandit and Safety specifically
+
+# Send the formating to the right function
 def format_results(tool_name, results):
     """
     Formats and prints the results for Bandit and Safety tools.
@@ -52,6 +54,7 @@ def format_results(tool_name, results):
         format_checkov_results(results['output'])
     else:
         print_results(results)
+
 
 def format_bandit_results(results):
     """
@@ -83,6 +86,7 @@ def format_bandit_results(results):
     elif 'error' in results:
         print(f"Error: {results['error']}\nDetails: {results['details']}")
 
+
 def format_safety_results(results):
     """
     Formats and prints the results for Safety
@@ -97,37 +101,42 @@ def format_safety_results(results):
         safety_more_info = []
         for vulnerability in results['vulnerabilities']:
             # Wrapping the advisory to fit the table's width
-            advisory_wrapped = textwrap.wrap(vulnerability['advisory'], width=70)
-            first_line_advisory = advisory_wrapped[0] if advisory_wrapped else ''
-            remaining_advisory = "\n".join(
-                advisory_wrapped[1:]) if len(advisory_wrapped) > 1 else ''
+            advisory_wrapped = textwrap.wrap(
+                vulnerability['advisory'], width=70)
+            first_line_adv = advisory_wrapped[0] if advisory_wrapped else ''
+            remaining_advisory = ("\n".join(advisory_wrapped[1:])
+                                  if len(advisory_wrapped) > 1 else '')
 
             safety_more_info.append(vulnerability['more_info_url'])
 
-            # First row: Package, Installed Version, Vulnerable Spec, first part of Description
+            # First row: Package, Installed Version,
+            # Vulnerable Spec, first part of Description
             table_data.append([
                 vulnerability['package_name'],
                 vulnerability['analyzed_version'],
                 vulnerability['vulnerable_spec'][0],
-                first_line_advisory,  # Only the first line of the advisory here
+                first_line_adv,
             ])
 
-            # Second row: Empty fields for Package, Version, etc., and rest of Description
+            # Second row: Empty fields for Package,
+            # Version, etc., and rest of Description
             if remaining_advisory:
                 table_data.append([
-                    '',  # Empty package name
-                    '',  # Empty version
-                    '',  # Empty vulnerable spec
-                    remaining_advisory,  # Rest of the advisory here
+                    '',
+                    '',
+                    '',
+                    remaining_advisory,
                 ])
 
-        headers = ["Package", "Installed Version", "Vulnerable Spec", "Description"]
+        headers = ["Package", "Installed Version",
+                   "Vulnerable Spec", "Description"]
         print(tabulate(table_data, headers=headers, tablefmt="pretty"))
 
         print("More Info about these issues:")
         for info in safety_more_info:
             print(info)
         print('\n')
+
 
 def parse_summary(lines):
     """
@@ -145,6 +154,7 @@ def parse_summary(lines):
 
     return summary_info
 
+
 def format_checkov_results(raw_output):
     """
     Formats and prints the results for Checkov.
@@ -161,8 +171,8 @@ def format_checkov_results(raw_output):
 
     # Display the scan summary
     print("\nScan Summary:")
-    print(f"Passed:{summary['passed']}, Failed:{summary['failed']}, Skipped:{summary['skipped']}\n")
-
+    print(f"Passed:{summary['passed']}, Failed:{summary['failed']}, "
+          f"Skipped:{summary['skipped']}\n")
 
     for i, line in enumerate(lines):
         if "FAILED" in line:
@@ -181,11 +191,12 @@ def format_checkov_results(raw_output):
                 # In case the split fails, set default values
                 start_line = end_line = 'N/A'
 
-            # Extract the guide URL in one line and append it to the more_info list
+            # Extract the guide URL in one line and append to more_info list
             more_info.append(lines[i + 2].strip().split(' ')[-1])
 
             # Add to failed checks list
-            failed_checks.append([file, start_line, end_line, check_id, check_title])
+            failed_checks.append(
+                [file, start_line, end_line, check_id, check_title])
 
     # Print the summary of failed checks
     print(f"Failed checks: {summary['failed']}")
@@ -201,6 +212,7 @@ def format_checkov_results(raw_output):
         for info in more_info:
             print(info)
         print('\n')
+
 
 # General print function for tools like TruffleHog and Pylint
 def print_results(results):

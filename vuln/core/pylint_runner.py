@@ -1,5 +1,5 @@
 """
-This module contains functions to run Pylint with Dlint on a given file or directory
+This module contains functions to run Pylint with Dlint on a given file/dir
 and return the scan output along with any errors encountered.
 """
 import subprocess
@@ -8,6 +8,7 @@ import os
 
 # Initialize logger
 logger = logging.getLogger(__name__)
+
 
 def trim_path(file_path):
     """
@@ -19,9 +20,11 @@ def trim_path(file_path):
     # Combine the folder and file name
     return os.path.join(folder, file)
 
+
 def run_subprocess(command):
     """Run a subprocess and return the output."""
     return subprocess.run(command, capture_output=True, text=True, check=False)
+
 
 def process_module_output(lines, trim_path):
     """Process and normalize the output, organizing by module."""
@@ -36,11 +39,14 @@ def process_module_output(lines, trim_path):
             module_output[current_module].append(line)
     return module_output
 
+
 def process_flake8_output(lines, module_output, trim_path):
     """Process Flake8 output and merge with Pylint output."""
     for line in lines:
         if ':' in line:
-            file_path = os.path.normpath(line.split(":")[0] if line.startswith("..") else line.split(":")[1])
+            file_path = os.path.normpath(
+                line.split(":")[0] if line.startswith("..")
+                else line.split(":")[1])
             file_path = trim_path(file_path)
             if file_path in module_output:
                 module_output[file_path].insert(1, f"Flake8: {line}")
@@ -48,8 +54,10 @@ def process_flake8_output(lines, module_output, trim_path):
                 module_output[file_path] = [f"Flake8: {line}"]
     return module_output
 
+
 def run_pylint(scan_path):
-    """Run Pylint and Flake8, combine their outputs, and return results."""
+    """Run Pylint and Flake8, combine their outputs, and return results"""
+    print("Tool: Pylint with Flake8(Dlint)")
     try:
         # Run Pylint
         pylint_output = run_subprocess(['pylint', scan_path])
@@ -61,15 +69,18 @@ def run_pylint(scan_path):
 
         # Process the outputs
         module_output = process_module_output(pylint_output_lines, trim_path)
-        module_output = process_flake8_output(flake8_output_lines, module_output, trim_path)
+        module_output = process_flake8_output(
+            flake8_output_lines, module_output, trim_path)
 
         # Combine the output
-        combined_output_str = "\n".join("\n".join(output_lines) for output_lines in module_output.values())
+        combined_output_str = "\n".join(
+            "\n".join(output_lines) for output_lines in module_output.values())
 
         # Return the combined output
         return {
             "output": combined_output_str,
-            "error": pylint_output.stderr if pylint_output.returncode != 0 else None,
+            "error": pylint_output.stderr if pylint_output.returncode != 0
+            else None,
         }
 
     except subprocess.CalledProcessError as e:
