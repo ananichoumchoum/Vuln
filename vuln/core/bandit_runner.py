@@ -31,9 +31,9 @@ def run_bandit(scan_path):
     try:
         # Run Bandit and capture output
         bandit_cmd = ['bandit', '-r', scan_path, '-f', 'json']
-
         process = subprocess.run(
             bandit_cmd, capture_output=True, text=True, check=False)
+
         if process.returncode == 0:
             print("Bandit scan completed with no issues.")
         elif process.returncode == 1:
