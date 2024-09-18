@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 from vuln.core.bandit_runner import run_bandit
 
+
 class TestBanditRunner(unittest.TestCase):
     """Tests for Bandit runner methods."""
 

@@ -6,6 +6,7 @@ import subprocess
 from unittest.mock import patch, MagicMock
 from vuln.core.checkov_runner import run_checkov
 
+
 class TestRunCheckov(unittest.TestCase):
     """Tests for Checkov runner methods."""
     @patch('subprocess.run')
@@ -44,12 +45,14 @@ class TestRunCheckov(unittest.TestCase):
     def test_run_checkov_execution_failure(self, mock_subprocess):
         """Test Checkov scan failure due to execution error."""
         # Mock a subprocess.CalledProcessError
-        mock_subprocess.side_effect = subprocess.CalledProcessError(1, 'checkov')
+        mock_subprocess.side_effect = subprocess.CalledProcessError(
+            1, 'checkov')
 
         scan_path = 'invalid/path'
         result = run_checkov(scan_path)
 
         self.assertIn("Checkov execution failed", result["error"])
+
 
 if __name__ == '__main__':
     unittest.main()

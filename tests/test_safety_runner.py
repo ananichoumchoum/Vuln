@@ -7,6 +7,7 @@ import subprocess
 from unittest.mock import patch
 from vuln.core.safety_runner import run_safety
 
+
 class TestSafetyRunner(unittest.TestCase):
     """Tests for the Safety runner methods."""
 
@@ -39,6 +40,7 @@ class TestSafetyRunner(unittest.TestCase):
         self.assertIn('error', results)
         self.assertEqual(results['error'], 'Safety scan failed')
         self.assertIn('Simulated Safety error', results['details'])
+
 
 if __name__ == '__main__':
     unittest.main()

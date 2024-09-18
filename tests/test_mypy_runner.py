@@ -6,12 +6,13 @@ from unittest.mock import patch
 import subprocess
 from vuln.core.mypy_runner import run_mypy
 
+
 class TestMypyRunner(unittest.TestCase):
     """Tests for the MyPy runner methods."""
 
     @patch('subprocess.run')
     def test_mypy_with_no_issues(self, mock_subprocess):
-        """Test MyPy runner when no type-checking issues are found (exit code 0)."""
+        """Test MyPy runner no type-checking issues are found(exit code 0)"""
         # Mock subprocess to simulate MyPy running without issues
         mock_subprocess.return_value.stdout = "Success: no issues found in 1 source file"
         mock_subprocess.return_value.returncode = 0
@@ -20,12 +21,13 @@ class TestMypyRunner(unittest.TestCase):
         results = run_mypy('valid/file.py')
         self.assertIsInstance(results, dict)
         self.assertIn('output', results)
-        self.assertEqual(results['output'], "Success: no issues found in 1 source file")
+        self.assertEqual(results['output'],
+                         "Success: no issues found in 1 source file")
         self.assertIsNone(results['error'])
 
     @patch('subprocess.run')
     def test_mypy_with_type_issues(self, mock_subprocess):
-        """Test MyPy runner when type-checking issues are found (exit code 1)."""
+        """Test MyPy runner when type-checking issues are found(exit code 1)"""
         # Mock subprocess to simulate MyPy finding type issues
         mock_subprocess.return_value.stdout = (
             "valid/file_with_issues.py:3: error: Incompatible types in assignment"
@@ -37,7 +39,8 @@ class TestMypyRunner(unittest.TestCase):
         self.assertIsInstance(results, dict)
         self.assertIn('output', results)
         self.assertEqual(
-            results['output'], "valid/file_with_issues.py:3: error: Incompatible types")
+            results['output'],
+            "valid/file_with_issues.py:3: error: Incompatible types")
         self.assertIsNone(results['error'])
 
     @patch('subprocess.run')
@@ -63,6 +66,7 @@ class TestMypyRunner(unittest.TestCase):
         results = run_mypy('valid/file.py')
         self.assertIn("error", results)
         self.assertIn("MyPy execution failed", results['error'])
+
 
 if __name__ == '__main__':
     unittest.main()

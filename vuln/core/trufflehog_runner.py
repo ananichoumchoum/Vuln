@@ -11,13 +11,14 @@ from git.exc import InvalidGitRepositoryError, GitCommandError
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 def is_git_repo(scan_path):
     """
     Checks if the specified path is a valid Git repository.
-    
+
     Args:
         scan_path (str): The directory path to check.
-    
+
     Returns:
         bool: True if the path is a Git repository, False otherwise.
     """
@@ -27,13 +28,14 @@ def is_git_repo(scan_path):
     except InvalidGitRepositoryError:
         return False
 
+
 def has_remote_origin(scan_path):
     """
     Checks if the Git repository has a remote 'origin' set.
-    
+
     Args:
         scan_path (str): The directory path to check.
-    
+
     Returns:
         bool: True if the remote origin is set, False otherwise.
     """
@@ -44,19 +46,20 @@ def has_remote_origin(scan_path):
         logger.error("Error checking for remote origin: %s\n", e)
         return False
 
+
 def run_trufflehog(scan_path):
     """
     Runs TruffleHog on the specified scan_path and returns the output.
-    
+
     Args:
         scan_path (str): The file or directory path to scan with TruffleHog.
-    
+
     Returns:
         dict: A dictionary containing the output of the scan.
     """
     print("Tool: TruffleHog")
 
-  # Check if the directory is a valid Git repository
+    # Check if the directory is a valid Git repository
     if not is_git_repo(scan_path):
         error_msg = f"{scan_path} is not a valid Git repository.\n"
         logger.error(error_msg)
@@ -77,7 +80,8 @@ def run_trufflehog(scan_path):
     try:
         # Command to run TruffleHog
         trufflehog_cmd = ['trufflehog', 'git', '--repo_path', scan_path]
-        process = subprocess.run(trufflehog_cmd, capture_output=True, text=True, check=False)
+        process = subprocess.run(
+            trufflehog_cmd, capture_output=True, text=True, check=False)
 
         # Check if any secrets were found
         if process.returncode == 0:
@@ -86,7 +90,7 @@ def run_trufflehog(scan_path):
             logger.warning("TruffleHog found potential secrets.\n")
 
         return {"output": process.stdout,
-        "error": process.stderr if process.returncode != 0 else None}
+                "error": process.stderr if process.returncode != 0 else None}
 
     except subprocess.CalledProcessError as e:
         error_msg = f"TruffleHog execution failed: {e}\n"

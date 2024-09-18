@@ -6,6 +6,7 @@ import subprocess
 from unittest.mock import patch
 from vuln.core.pylint_runner import run_pylint
 
+
 class TestPylintRunner(unittest.TestCase):
     """Tests for the Pylint runner methods."""
 
@@ -66,6 +67,7 @@ class TestPylintRunner(unittest.TestCase):
 
         results = run_pylint('valid/file.py')
         self.assertIn("Execution failed", results['error'])
+
 
 if __name__ == '__main__':
     unittest.main()

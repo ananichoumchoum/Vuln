@@ -1,6 +1,6 @@
 """
 This module contains functions to run Checkov on a given file or directory
-and return the scan output along with any errors encountered.
+and return the scan output along with any errors encountered
 """
 import subprocess
 import logging
@@ -10,15 +10,16 @@ import sys
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 def run_checkov(scan_path):
     """
-    Runs Checkov on the specified scan_path and returns the output.
+    Runs Checkov on the specified scan_path and returns the output
 
     Args:
-        scan_path (str): The directory path to scan with Checkov.
+        scan_path (str): The directory path to scan with Checkov
 
     Returns:
-        dict: A dictionary containing the output of the scan or an error message.
+        dict: A dict containing the output of the scan or an error message
     """
     print("Tool: Checkov")
 
@@ -28,13 +29,13 @@ def run_checkov(scan_path):
         checkov_bat = os.path.join(venv_dir, 'checkov.cmd')
         checkov_cmd = [checkov_bat, '--directory', scan_path]
         process = subprocess.run(
-            checkov_cmd, capture_output=True, text=True, shell=True, check=False)
+            checkov_cmd, capture_output=True, text=True, check=False)
 
         # Check if Checkov returned any issues
         if process.returncode == 0:
-            logger.info("Checkov scan completed with no issues.\n")
+            logger.info("Checkov scan completed with no issues\n")
         else:
-            logger.warning("Checkov found potential security misconfigurations.\n")
+            logger.warning("Checkov found potential security misconfig\n")
 
         return {
             "output": process.stdout or "No output",
