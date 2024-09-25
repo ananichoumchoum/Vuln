@@ -12,6 +12,7 @@ init(autoreset=True)
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 def run_mypy(scan_path):
     """
     Runs MyPy on the specified scan_path and returns the output.

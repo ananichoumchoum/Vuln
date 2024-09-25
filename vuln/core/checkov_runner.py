@@ -14,6 +14,7 @@ init(autoreset=True)
 # Initialize logger
 logger = logging.getLogger(__name__)
 
+
 def run_checkov(scan_path):
     """
     Runs Checkov on the specified scan_path and returns the output.
@@ -22,7 +23,7 @@ def run_checkov(scan_path):
         scan_path (str): The directory path to scan with Checkov.
 
     Returns:
-        dict: A dictionary containing the output of the scan or an error message.
+        dict: A dictionary containing the output of the scan or error message.
     """
     print(Fore.YELLOW + "Tool: Checkov" + Style.RESET_ALL)
 
