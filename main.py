@@ -1,3 +1,7 @@
+"""
+This module serves as the entry point for running security tools on specified paths.
+"""
+
 import argparse
 import os
 from cli.interface import (
@@ -42,61 +46,53 @@ def run_selected_tools(tools_to_run, scan_path):
 
 
 def main():
+    """
+    Main function that parses CLI arguments and runs the specified tools.
+    """
     parser = argparse.ArgumentParser(
         description="Vuln: Security scanner for multiple tools")
-
-    # Accept the path to scan as an argument
-    parser.add_argument('--scan-path', type=is_valid_directory, required=True,
-                        help="Path to the directory or file to scan")
 
     # Accept the requirements.txt path for Safety
     parser.add_argument('--requirements-file',
                         type=is_valid_requirements_file,
                         default='requirements.txt',
-                        help="Path to the requirements file. "
-                             "Default: ./requirements.txt")
+                        help="Path to the requirements file.")
 
-    # Accept a list of tools to run, default is all tools if not specified
-    parser.add_argument('--tools', type=str, nargs='+',
-                        help="List of tools to run "
-                        "(e.g., bandit, safety, pylint, trufflehog, checkov)")
+    # Display the logo and main menu
+    display_logo()
 
-    args = parser.parse_args()
+    while True:
+        main_choice = show_main_menu()
 
-    # If no specific tools are provided, default to running all tools
-    tools_to_run = args.tools if args.tools else list(TOOLS.keys())
+        if main_choice == "Start Test":
+            python_choice = show_python_menu()
 
-    # Run each specified tool
-    for tool in tools_to_run:
-        try:
-            if tool == 'safety':
-                # Ensure the requirements file path is constructed correctly
-                requirements_file_path = args.requirements_file
-                # If the requirements file is not in the scan path
-                # use the default 'requirements.txt' from the scan path
-                if not os.path.isabs(requirements_file_path):
-                    requirements_file_path = os.path.join(
-                        args.scan_path, requirements_file_path)
+            # Map the user input to lowercase tool names in TOOLS dictionary
+            tool_key = python_choice.lower()
 
-                # Check if the requirements file exists in the constructed path
-                if not os.path.exists(requirements_file_path):
-                    print(f"Warning: Requirements file"
-                          f"'{requirements_file_path}'"
-                          f" does not exist. Skipping Safety scan.")
-                    continue
+            if python_choice == "Run All Tests":
+                tools_to_run = list(TOOLS.keys())
 
-                results = run_tool(tool, requirements_file_path)
+            elif python_choice == "Security":
+                tools_to_run = get_tools_for_category("Security")
+
+            elif python_choice == "Linting":
+                tools_to_run = get_tools_for_category("Linting")
+
+            # If a specific tool is selected (like "Bandit", "Safety", etc.)
+            elif tool_key in TOOLS:
+                tools_to_run = [tool_key]
+
+            elif python_choice == "Exit":
+                print("Exiting...")
+                break
+
             else:
-                # Run Bandit or other tools that use the scan path directly
-                results = run_tool(tool, args.scan_path)
+                print(f"Unknown selection: {python_choice}")
+                continue
 
-            format_results(tool, results)
-        except FileNotFoundError as fnf_error:
-            print(f"File not found: {fnf_error}")
-        except PermissionError as perm_error:
-            print(f"Permission denied: {perm_error}")
-        except Exception as ex:
-            print(f"Unexpected error occurred while running {tool}: {ex}")
+            # Ask the user for the scan path (file or directory) to scan
+            scan_path = ask_for_scan_path()
 
             # Run the selected tools
             run_selected_tools(tools_to_run, scan_path)
