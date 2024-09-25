@@ -5,24 +5,34 @@
 2. [Features](#features)
 3. [Installation](#installation)
 4. [Usage](#usage)
-   1. [Sample Output](#sample-output)
+   1. [Requirements File](#requirements-file)
+   2. [Sample Output](#sample-output)
 5. [Running Tests](#running-tests)
 6. [Branching Strategy](#branching-strategy)
 7. [Contributing](#contributing)
 8. [License](#license)
 
 ### Overview
-**Vuln** is a Python-based security tool designed to scan Python codebases for common security vulnerabilities and coding practices. It integrates with popular security scanning tools such as Bandit and Safety, providing a modular and extendable framework to help developers maintain secure code.
+**Vuln** is a Python-based security tool designed to help developers ensure their code adheres to ethical and secure coding practices. It provides an easy-to-use, interactive command-line interface (CLI) for scanning Python codebases and dependencies for common security vulnerabilities, potential bugs, and bad practices.
 
-Bandit identifies common security issues like hardcoded secrets, unsafe use of functions, and potential injection vulnerabilities in Python code.
-Safety checks project dependencies for known vulnerabilities in third-party libraries, ensuring that your project does not rely on insecure packages.
-With its modular design, Vuln is extendable and adaptable, making it easy to integrate additional security tools and enforce secure coding conventions across projects.
+With **Vuln**, developers can quickly identify issues such as hardcoded credentials, unsafe function use, outdated dependencies, or other security risks that may compromise their application. The tool integrates several popular security and linting tools, making it a one-stop shop for improving Python code quality.
 
-## Features
-- **Bandit Module**: Scans Python code for security issues like hardcoded secrets, SQL injection, and more.
-- **Safety Module**: Checks project dependencies for known vulnerabilities in third-party libraries, ensuring safe usage of external packages.
-- **Error Handling**: Ensures graceful failure with informative error messages.
-- **Modular Design**: Easily extend the tool with additional security scanners.
+### Features
+Vuln supports the following tools for code analysis:
+
+- **Bandit**: Scans Python code for security issues like hardcoded passwords, insecure functions, and potential SQL injection vulnerabilities. Learn more [here](https://bandit.readthedocs.io).
+- **Checkov**: Scans infrastructure-as-code (IaC) files (e.g., Terraform) for misconfigurations that could lead to security issues. Learn more [here](https://www.checkov.io).
+- **Safety**: Checks project dependencies for known vulnerabilities in third-party libraries. Learn more [here](https://pyup.io/safety/).
+- **Trufflehog**: Scans code for secrets (API keys, credentials, etc.) that may have been accidentally committed. Learn more [here](https://github.com/trufflesecurity/truffleHog).
+- **Flake8 (with dlint)**: Combines linting and code style enforcement with security-focused linting rules via dlint. Learn more [here](https://flake8.pycqa.org/) and [here](https://github.com/dlint-py/dlint).
+- **Mypy**: Performs static type checking to ensure type safety in Python code. Learn more [here](https://mypy-lang.org/).
+- **Radon**: Measures code complexity, helping to identify overly complex code that can be error-prone. Learn more [here](https://radon.readthedocs.io/).
+- **Pylint**: Analyzes Python code for potential errors, bad practices, and coding standard violations. Learn more [here](https://pylint.pycqa.org/).
+
+The tool features:
+- **Interactive CLI**: Choose which tools to run, select paths interactively, and view detailed scan results.
+- **Error Handling**: Clear and informative error messages help you resolve issues quickly.
+- **Modular Design**: Easily extend the tool to include additional scanners or analysis tools.
 
 ## Installation
 
@@ -30,43 +40,51 @@ With its modular design, Vuln is extendable and adaptable, making it easy to int
     ```bash
     git clone https://github.com/yourusername/vuln.git
     cd vuln
+    ```
+
 2. Create and activate a virtual environment:
     ```bash
     python -m venv venv
     source venv/bin/activate  # On macOS/Linux
     venv\Scripts\activate     # On Windows
+    ```
+
 3. Install the required dependencies:
     ```bash
     pip install -r requirements.txt
-4. Install Snyk using npm (Node.js must be installed):
-    ```bash
-    npm install -g snyk
+    ```
 
 ## Usage
-To scan a Python project for security issues using all tools, run:
+
+To use the interactive CLI, run the following command:
+
 ```bash
-python -m main --scan-path ../path/to/your/file
+python .\main.py
 ```
 
-To scan a Python project for security issues using specific tools like Bandit, run:
-```bash
-python -m main --scan-path ../path/to/your/file --tools bandit
-```
-If you want to scan a specific requirements.txt file that is not in the root of your project or has a different name, you should pass the path to that file explicitly using the --requirements-file argument for the Safety tool.
+The CLI will guide you through selecting the desired tests, tools, and paths. You can choose to run individual tools such as Bandit or Safety or run all tests at once.
 
-Here’s how you can run the scan with the custom requirements.txt file:
-```bash
-python -m main --scan-path ../path/to/your/project --tools safety --requirements-file custom_requirements.txt
-```
+You will be greeted with a welcome message and an interactive menu. The steps below outline the typical usage:
 
-#### Explanation of Arguments:
-`--scan-path`: The directory path to scan for security issues.
+1. Start Test: Select this option to begin scanning your code.
 
-`--tools`: Allows you to choose which tool(s) to use for the scan (e.g., bandit, safety). If not specified, all tools will run by default.
+2. Select Tests: You can either:
 
-`--requirements-file`: The default file for Safety scans is **requirements.txt** located in the root directory, following Python's standard project structure. If your project uses a different file name or places it elsewhere, you can specify the exact file path using this argument.
+- Run All Tests: This will run all available tests (e.g., Bandit, Safety).
+- Select Individual Tests: Choose from tools like Bandit, Safety, Checkov, and others.
 
-This setup allows you to run versatile scans tailored to your specific needs while maintaining flexibility for different project structures.
+3. Specify File or Directory: You will be prompted to enter the file path or directory to scan. For example: `../path_to_project_or_file`
+
+4. Results Display: The results will be shown in a table format, highlighting any security issues found in the code, along with severity and confidence levels.
+
+5. Next Step: After viewing the results, you can either:
+
+- Run another test.
+- Exit the CLI.
+
+### Requirements File
+
+When using the Safety tool, Vuln expects to scan a requirements.txt file located in the root of your project. If your project uses a different file or the requirements file is stored elsewhere, you will be prompted to specify the path manually. For example: `..\custom\path\to\requiements.txt`
 
 ### Sample Output
    ![alt text](image.png)

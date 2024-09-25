@@ -6,7 +6,10 @@ import subprocess
 import json
 import os
 import logging
+from colorama import Fore, Style, init
 
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,13 +25,16 @@ def run_safety(requirements_file):
     Returns:
     - dict: JSON-parsed result of the Safety scan or error details
     """
-    print("Tool: Safety")
+    print(Fore.YELLOW + "Tool: Safety" + Style.RESET_ALL)
 
     # Validate the requirements file path
     if not os.path.exists(requirements_file):
         print("[Error] Requirements file not found.")
         print("The requirements file is missing from the path you specified.")
-        print("If your file has a different name or is located elsewhere, please use:")
+        print(
+            "If your file has a different name or is located elsewhere,"
+            " please use:"
+        )
         print("--requirements-file <file_path/name_file> --tools safety\n")
         return {"error": "Requirements file not found"}
     try:

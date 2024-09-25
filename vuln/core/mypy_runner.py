@@ -1,9 +1,13 @@
 """
 This module contains functions to run MyPy on a given file or directory
-and return the type checking output along with any errors encountered
+and return the type checking output along with any errors encountered.
 """
 import subprocess
 import logging
+from colorama import Fore, Style, init
+
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 
 # Initialize logger
 logger = logging.getLogger(__name__)
@@ -11,15 +15,15 @@ logger = logging.getLogger(__name__)
 
 def run_mypy(scan_path):
     """
-    Runs MyPy on the specified scan_path and returns the output
+    Runs MyPy on the specified scan_path and returns the output.
 
     Args:
-        scan_path (str): The file or directory path to scan with MyPy
+        scan_path (str): The file or directory path to scan with MyPy.
 
     Returns:
-        dict: A dictionary containing the output of the scan or error message
+        dict: A dictionary containing the output of the scan or error message.
     """
-    print("Tool: MyPy")
+    print(Fore.YELLOW + "Tool: Mypy" + Style.RESET_ALL)
 
     try:
         # Command to run MyPy

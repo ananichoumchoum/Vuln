@@ -1,11 +1,15 @@
 """
-This module runs the Bandit security scanner on a given path and parses results
-Captures the output in JSON format and handles potential errors during the scan
+This module runs the Bandit security scanner on a path and parses the results.
+It captures the output in JSON format and handles potential errors during scan.
 """
 import subprocess
 import json
 import os
 import logging
+from colorama import Fore, Style, init
+
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -22,7 +26,7 @@ def run_bandit(scan_path):
     Returns:
     - dict: JSON-parsed result of the Bandit scan.
     """
-    print("Tool: Bandit")
+    print(Fore.YELLOW + "Tool: Bandit" + Style.RESET_ALL)
 
     # Validate scan path
     if not os.path.exists(scan_path):
@@ -31,9 +35,9 @@ def run_bandit(scan_path):
     try:
         # Run Bandit and capture output
         bandit_cmd = ['bandit', '-r', scan_path, '-f', 'json']
+
         process = subprocess.run(
             bandit_cmd, capture_output=True, text=True, check=False)
-
         if process.returncode == 0:
             print("Bandit scan completed with no issues.")
         elif process.returncode == 1:
