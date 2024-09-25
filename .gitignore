@@ -4,6 +4,6 @@ venv/
 # Python bytecode files
 __pycache__/
 *.py[cod]
-
+.mypy_cache
 # Ignore editor files
 *.vscode/

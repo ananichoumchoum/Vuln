@@ -9,6 +9,7 @@ from utils.validation import is_valid_directory, is_valid_requirements_file
 # Initialize colorama for cross-platform support
 init(autoreset=True)
 
+
 def display_logo():
     """
     Display the refined VULN CLI logo
@@ -19,8 +20,8 @@ def display_logo():
 ||                                                               ||
 ||   ██████                                             ██████   ||
 ||   █    █                                             █    █   ||
-||   █ ██ █                                             █ ██ █   ||      
-||   █    █                                             █    █   ||                     
+||   █ ██ █                                             █ ██ █   ||
+||   █    █                                             █    █   ||
 ||   ██████                                             ██████   ||
 ||                                                               ||
 ||          ██        ██  ██    ██ ██      ███    ██             ||
@@ -31,9 +32,9 @@ def display_logo():
 ||                                                               ||
 ||   ██████                                             ██████   ||
 ||   █    █                                             █    █   ||
-||   █ ██ █                                             █ ██ █   ||      
-||   █    █    Static Code Scanner 2.0                  █    █   ||                     
-||   ██████                                             ██████   || 
+||   █ ██ █                                             █ ██ █   ||
+||   █    █    Static Code Scanner 2.0                  █    █   ||
+||   ██████                                             ██████   ||
 ||                                                               ||
 || ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ ||
 +================================================================+
@@ -45,7 +46,7 @@ def display_logo():
         "VULN CLI!" + Style.RESET_ALL
     )
     print(
-    "Your one-stop shop for scanning, finding, and eliminating bad practices."
+        "Your one-stop shop for scanning, and eliminating bad practices."
     )
     print(
         "We’re here to save you from your bad security practices..."
@@ -89,6 +90,7 @@ def show_main_menu():
     answer = prompt(menu_questions)
     return answer['main_menu_choice']
 
+
 def show_python_menu():
     """
     Display the Python test menu for the VULN CLI.
@@ -108,11 +110,12 @@ def show_python_menu():
     answer = prompt(python_menu_questions)
     return answer['python_menu_choice']
 
+
 def ask_for_scan_path():
     """
     Prompt the user to enter the scan path (file or directory) to scan.
     Validates the input before returning the path.
-    
+
     Returns:
         str: The path to the file or directory to scan.
     """
@@ -137,6 +140,6 @@ def ask_for_scan_path():
                 is_valid_requirements_file(scan_path)
                 return os.path.abspath(scan_path)
             print(f"Error: '{scan_path}' is neither a valid file nor"
-                    f" directory. Please try again.")
+                  f" directory. Please try again.")
         except ValueError as e:
             print(str(e))

@@ -1,5 +1,5 @@
 """
-This module serves as the entry point for running security tools on specified paths.
+This module serves as entry point for running security tools on specified paths
 """
 
 import argparse
@@ -8,7 +8,8 @@ from cli.interface import (
     display_logo, show_main_menu, show_python_menu, ask_for_scan_path
 )
 from utils.validation import (
-    is_valid_requirements_file, get_tools_for_category, ask_for_requirements_file
+    is_valid_requirements_file, get_tools_for_category,
+    ask_for_requirements_file
 )
 from vuln.core.tool_runner import format_results, TOOLS, run_tool
 

@@ -28,7 +28,10 @@ def run_safety(requirements_file):
     if not os.path.exists(requirements_file):
         print("[Error] Requirements file not found.")
         print("The requirements file is missing from the path you specified.")
-        print("If your file has a different name or is located elsewhere, please use:")
+        print(
+            "If your file has a different name or is located elsewhere,"
+            " please use:"
+        )
         print("--requirements-file <file_path/name_file> --tools safety\n")
         return {"error": "Requirements file not found"}
     try:

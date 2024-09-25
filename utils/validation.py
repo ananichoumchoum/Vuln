@@ -1,7 +1,7 @@
 """
-This module provides utility functions for validating file paths, 
-fetching tools based on categories, and handling user input for scanning. 
-Ensures valid directories/files are provided. Prompts user for correct inputs. 
+This module provides utility functions for validating file paths,
+fetching tools based on categories, and handling user input for scanning.
+Ensures valid directories/files are provided. Prompts user for correct inputs.
 It also handles graceful program exit on Ctrl+C.
 """
 
@@ -24,11 +24,11 @@ def ask_for_requirements_file(scan_path, default_file):
     """
     Prompt user to either use default requirements.txt or provide custom one.
     Re-prompts the user until a valid file is provided.
-    
+
     Args:
         scan_path (str): The scan path where the requirements file is located.
         default_file (str): The default file path for requirements.txt.
-        
+
     Returns:
         str: The valid path to the requirements file.
     """
