@@ -1,24 +1,44 @@
 import argparse
 import os
-from vuln.core.tool_runner import run_tool, format_results, TOOLS
+from cli.interface import (
+    display_logo, show_main_menu, show_python_menu, ask_for_scan_path
+)
+from utils.validation import (
+    is_valid_requirements_file, get_tools_for_category, ask_for_requirements_file
+)
+from vuln.core.tool_runner import format_results, TOOLS, run_tool
 
 
-def is_valid_directory(path):
-    """Check if the provided path is a valid directory."""
-    if not os.path.exists(path):
-        raise argparse.ArgumentTypeError(f"Path {path} does not exist.")
-    if not os.path.isdir(path):
-        raise argparse.ArgumentTypeError(f"Path {path} is not a directory.")
-    return os.path.abspath(path)
+def run_selected_tools(tools_to_run, scan_path):
+    """
+    Runs the selected tools with the provided scan path.
+    """
+    for tool in tools_to_run:
+        try:
+            if tool == 'safety':
+                requirements_file_path = ask_for_requirements_file(
+                    scan_path, 'requirements.txt')
 
+                if not os.path.exists(requirements_file_path):
+                    print(f"Warning: Requirements file "
+                          f"'{requirements_file_path}' does not exist."
+                          f"Skipping Safety scan.")
+                    continue
 
-def is_valid_requirements_file(path):
-    """Check if the provided file exists."""
-    if not os.path.exists(path):
-        raise argparse.ArgumentTypeError(f"File {path} does not exist.")
-    if not os.path.isfile(path) or not path.endswith('.txt'):
-        raise argparse.ArgumentTypeError(f"File {path} not a valid .txt file.")
-    return os.path.abspath(path)
+                # Run the tool with the correct requirements file path
+                results = run_tool(tool, requirements_file_path)
+            else:
+                # Run the other tools with the user-provided scan path
+                results = run_tool(tool, scan_path)
+
+            format_results(tool, results)
+
+        except FileNotFoundError as fnf_error:
+            print(f"File not found: {fnf_error}")
+        except PermissionError as perm_error:
+            print(f"Permission denied: {perm_error}")
+        except OSError as os_error:
+            print(f"OS error: {os_error}")
 
 
 def main():
@@ -30,8 +50,8 @@ def main():
                         help="Path to the directory or file to scan")
 
     # Accept the requirements.txt path for Safety
-    # default to requirements.txt in the current working directory
-    parser.add_argument('--requirements-file', type=str,
+    parser.add_argument('--requirements-file',
+                        type=is_valid_requirements_file,
                         default='requirements.txt',
                         help="Path to the requirements file. "
                              "Default: ./requirements.txt")
@@ -77,6 +97,13 @@ def main():
             print(f"Permission denied: {perm_error}")
         except Exception as ex:
             print(f"Unexpected error occurred while running {tool}: {ex}")
+
+            # Run the selected tools
+            run_selected_tools(tools_to_run, scan_path)
+
+        elif main_choice == "Exit":
+            print("Goodbye!")
+            break
 
 
 if __name__ == "__main__":
