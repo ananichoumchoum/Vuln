@@ -6,7 +6,10 @@ import subprocess
 import json
 import os
 import logging
+from colorama import Fore, Style, init
 
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,7 +25,7 @@ def run_safety(requirements_file):
     Returns:
     - dict: JSON-parsed result of the Safety scan or error details
     """
-    print("Tool: Safety")
+    print(Fore.YELLOW + "Tool: Safety" + Style.RESET_ALL)
 
     # Validate the requirements file path
     if not os.path.exists(requirements_file):

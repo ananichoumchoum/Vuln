@@ -6,22 +6,25 @@ import subprocess
 import logging
 import os
 import sys
+from colorama import Fore, Style, init
+
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 
 # Initialize logger
 logger = logging.getLogger(__name__)
 
-
 def run_checkov(scan_path):
     """
-    Runs Checkov on the specified scan_path and returns the output
+    Runs Checkov on the specified scan_path and returns the output.
 
     Args:
-        scan_path (str): The directory path to scan with Checkov
+        scan_path (str): The directory path to scan with Checkov.
 
     Returns:
-        dict: A dict containing the output of the scan or an error message
+        dict: A dictionary containing the output of the scan or an error message.
     """
-    print("Tool: Checkov")
+    print(Fore.YELLOW + "Tool: Checkov" + Style.RESET_ALL)
 
     try:
         # Command to run Checkov

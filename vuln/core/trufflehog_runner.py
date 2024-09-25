@@ -7,7 +7,10 @@ import logging
 import os
 import git
 from git.exc import InvalidGitRepositoryError, GitCommandError
+from colorama import Fore, Style, init
 
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 # Initialize logger
 logger = logging.getLogger(__name__)
 
@@ -57,7 +60,7 @@ def run_trufflehog(scan_path):
     Returns:
         dict: A dictionary containing the output of the scan.
     """
-    print("Tool: TruffleHog")
+    print(Fore.YELLOW + "Tool: Trufflehog" + Style.RESET_ALL)
 
     # Check if the directory is a valid Git repository
     if not is_git_repo(scan_path):

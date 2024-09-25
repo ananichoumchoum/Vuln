@@ -5,7 +5,10 @@ and return the scan output along with any errors encountered.
 import subprocess
 import logging
 import os
+from colorama import Fore, Style, init
 
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 # Initialize logger
 logger = logging.getLogger(__name__)
 
@@ -57,7 +60,7 @@ def process_flake8_output(lines, module_output, trim_path):
 
 def run_pylint(scan_path):
     """Run Pylint and Flake8, combine their outputs, and return results"""
-    print("Tool: Pylint with Flake8(Dlint)")
+    print(Fore.YELLOW + "Tool: Pylint with Flake8(Dlint)" + Style.RESET_ALL)
     try:
         # Run Pylint
         pylint_output = run_subprocess(['pylint', scan_path])

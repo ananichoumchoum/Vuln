@@ -4,7 +4,10 @@ and return the complexity analysis output along with any errors encountered
 """
 import subprocess
 import logging
+from colorama import Fore, Style, init
 
+# Initialize colorama for cross-platform support
+init(autoreset=True)
 # Initialize logger
 logger = logging.getLogger(__name__)
 
@@ -19,7 +22,7 @@ def run_radon(scan_path):
     Returns:
         dict: A dictionary containing the output of the scan or error message
     """
-    print("Tool: Radon")
+    print(Fore.YELLOW + "Tool: Radon" + Style.RESET_ALL)
     try:
         # Command to run Radon
         radon_cmd = ['radon', 'cc', scan_path, '-s']

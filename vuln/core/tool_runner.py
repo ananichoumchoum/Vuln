@@ -64,28 +64,23 @@ def format_bandit_results(results):
     """
 
     if 'results' in results and results['results']:
-        print(f"Issue Count: {len(results['results'])}")
 
         table_data = []
         more_info = []
         for issue in results['results']:
             more_info.append(issue['more_info'])
             # Get the full file path
-            print(f"Processing issue: {issue}")
             full_path = issue.get('filename', '')
-            print(f"Full Path: {full_path}")
             # Check if the path exists and handle the case if it's empty
             if full_path:
                 # Get the base name (file name with extension)
                 filename = os.path.basename(full_path)
-                print(f"Full Path: {full_path}")
 
                 # Get the directory part of the path (last folder)
                 directory = os.path.basename(os.path.dirname(full_path))
 
                 # Combine directory and filename
                 formatted_path = os.path.join(directory, filename)
-                print(f"Formatted Path: {formatted_path}")
             else:
                 # Fallback in case filename is missing or empty
                 formatted_path = "Unknown Path"
