@@ -10,7 +10,8 @@
 5. [Running Tests](#running-tests)
 6. [Branching Strategy](#branching-strategy)
 7. [Contributing](#contributing)
-8. [License](#license)
+8. [Future Improvements](#future-improvements)
+9. [License](#license)
 
 ### Overview
 **Vuln** is a Python-based security tool designed to help developers ensure their code adheres to ethical and secure coding practices. It provides an easy-to-use, interactive command-line interface (CLI) for scanning Python codebases and dependencies for common security vulnerabilities, potential bugs, and bad practices.
@@ -121,17 +122,20 @@ Contributions are welcome! Please follow these steps:
 1. Fork the repository.
 2. Create a feature branch:
     ```bash
-    Copy code
     git checkout -b feature/your-feature
 3. Commit your changes:
     ```bash
-    Copy code
     git commit -m 'Add your feature'
 4. Push the branch:
     ```bash
-    Copy code
     git push origin feature/your-feature
 5. Open a pull request to the `develop` branch.
+
+## Future Improvements
+
+- Expand scanning support by adding additional tool runners for languages and frameworks beyond Python.
+- Extend documentation to guide users on automating Vuln in CI/CD pipelines and integrating scan results into automated workflows.
+- Continue improving the CLI user experience based on feedback and evolving security practices.
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
