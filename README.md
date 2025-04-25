@@ -60,7 +60,7 @@ The tool features:
 To use the interactive CLI, run the following command:
 
 ```bash
-python .\main.py
+python main.py
 ```
 
 The CLI will guide you through selecting the desired tests, tools, and paths. You can choose to run individual tools such as Bandit or Safety or run all tests at once.
@@ -85,7 +85,7 @@ You will be greeted with a welcome message and an interactive menu. The steps be
 
 ### Requirements File
 
-When using the Safety tool, Vuln expects to scan a requirements.txt file located in the root of your project. If your project uses a different file or the requirements file is stored elsewhere, you will be prompted to specify the path manually. For example: `..\custom\path\to\requiements.txt`
+When using the Safety tool, Vuln expects to scan a requirements.txt file located in the root of your project. If your project uses a different file or the requirements file is stored elsewhere, you will be prompted to specify the path manually. For example: `../custom/path/to/requirements.txt`
 
 ### Sample Output
    ![alt text](image.png)
